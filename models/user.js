@@ -15,6 +15,10 @@ var userSchema = new Schema({
     name: {
         type : String,
         require : true
+    }, 
+    isAdmin: {
+        type:Boolean,
+        default: false
     },
     mobileNo: String
 });

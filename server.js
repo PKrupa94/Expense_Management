@@ -12,7 +12,6 @@ var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('../EMS/config'); // get our config file
 var User   = require('../EMS/models/user'); // get our mongoose model
 
-
 //-----------------------------------------
     //Configuration
 //-----------------------------------------
@@ -25,23 +24,31 @@ app.use(bodyParser.json());
 app.use(morgan('dev'));
 
 
-app.get('/setUp', function(req, res) {
-    console.log('setup--------------------------->')
-    var user = new User({
-        email :'test@123.gmail.com',
-        password:'test',
-        name:'krupa',
-        mobileNo:'123456789'
-    });
+var apiRoutes = require('../EMS/routes/api'); //get api routes
+app.use('/api',apiRoutes);
 
-    user.save(function(err){
-        if(err) throw err;
-        console.log("User Saved");
-        res.json({success:true});
-    });
-
-    res.send('Hello! The API is at http://localhost:' + port + '/api');
+var db = mongoose.connection;
+db.once('open',function(){
+    console.log('Database connection');
 });
+
+// app.get('/setUp', function(req, res) {
+//     console.log('setup--------------------------->')
+//     var user = new User({
+//         email :'test@123.gmail.com',
+//         password:'test',
+//         name:'krupa',
+//         mobileNo:'123456789'
+//     });
+
+//     user.save(function(err){
+//         if(err) throw err;
+//         console.log("User Saved");
+//         res.json({success:true});
+//     });
+
+//     res.send('Hello! The API is at http://localhost:' + port + '/api');
+// });
 // ---------------------------------------
 // start the server 
 // ---------------------------------------
