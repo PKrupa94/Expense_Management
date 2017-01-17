@@ -10,6 +10,7 @@ console.log(userCtrl);
 router.route('/user/userRegister').post(userCtrl.userRegister);
 router.route('/user/login').post(userCtrl.login);
 router.route('/user/forgotPassword').post(userCtrl.forgotPassword);
+router.route('/user/deleteUser').post(userCtrl.deleteUser);
 
 
 module.exports = router;

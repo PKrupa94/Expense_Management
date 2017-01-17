@@ -115,8 +115,11 @@ exports.forgotPassword = function(req,res){
                     pass: 'krupa@123'
                 }
             };
+
+            // create reusable transporter object using the default SMTP transport 
             var transporter = nodemailer.createTransport(config);
 
+            // setup e-mail data
             var mailOptions = {
                 from: '"EMS System" <krupa.patel.sa@gmail.com>',
                 to: user.email,
@@ -124,6 +127,7 @@ exports.forgotPassword = function(req,res){
                 text: 'Hello ' + user.fullName + ', your passsword is, \n password ==> ' + user.password
             };
 
+            // send mail with defined transport object 
             transporter.sendMail(mailOptions, function (error, info) {
                 if (error) {
                     return console.log(error);
@@ -132,8 +136,30 @@ exports.forgotPassword = function(req,res){
             });
         }       
    });
+};
 
 
+//-----------------------------------------
+    //POST : /user/deleteUser
+    //User delete
+//-----------------------------------------
 
-
+exports.deleteUser = function(req,res){
+    if(validate.isEmpty(req.body.id)){
+        res.status(400).json({success: false, message: message.idNotFound});
+    }
+    console.log(mongoose.Types.ObjectId(req.body.id))
+    User.findOneAndRemove({_id:req.body.id},function(err,user){
+        console.log(err);
+        if(err){
+            res.status(400).json({success: false, message: message.errDeleteUser});
+        }else{
+            console.log(user)
+            if(user){
+                res.json({success: true, message: message.successDeleteUser});
+            }else{
+                res.status(404).json({success: false, message: message.userNotFoundForDelete});
+            }
+        }
+    });
 };

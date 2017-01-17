@@ -11,5 +11,9 @@ module.exports = {
     alreadyRegisterUser : 'Already registed User',
     registrationFailed : 'User registration failed',
     successRegister : 'User successfully created',
-    successForgotPass : 'Password sent to your email address'
+    successForgotPass : 'Password sent to your email address',
+    idNotFound : 'User Id is not found for delete user',
+    errDeleteUser : 'User is not deleted.Please try again',
+    successDeleteUser : 'User is successfully deleted',
+    userNotFoundForDelete : 'Sorry!!,User is not found for this Id'
 }

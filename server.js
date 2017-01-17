@@ -2,15 +2,14 @@
     //get the packeges
 //-----------------------------------------
 
-var express     = require('express');
-var app         = express();
-var bodyParser  = require('body-parser');
-var morgan      = require('morgan'); // log requests to the console
-var mongoose    = require('mongoose'); //interact with our MongoDB database
-
-var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
-var config = require('../EMS/config'); // get our config file
-var User   = require('../EMS/models/user'); // get our mongoose model
+const express     = require('express');
+const app         = express();
+const bodyParser  = require('body-parser');
+const morgan      = require('morgan'); // log requests to the console
+const mongoose    = require('mongoose'); //interact with our MongoDB database
+const jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
+const config = require('../EMS/config'); // get our config file
+const User   = require('../EMS/models/user'); // get our mongoose model
 
 //-----------------------------------------
     //Configuration
