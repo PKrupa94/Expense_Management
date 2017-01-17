@@ -22,7 +22,7 @@ module.exports = {
     },
     //mobile number validation
     isValidMobileNo :  function(number){
-         var phoneno = /^\d{10}$/;  //13 digits with no comma, no spaces, no punctuation and there will be no + sign in front the number
+         var phoneno = /^\d{10}$/;  //10 digits with no comma, no spaces, no punctuation and there will be no + sign in front the number
          return phoneno.test(number);
     }
 }
