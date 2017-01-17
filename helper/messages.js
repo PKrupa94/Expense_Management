@@ -15,5 +15,11 @@ module.exports = {
     idNotFound : 'User Id is not found for delete user',
     errDeleteUser : 'User is not deleted.Please try again',
     successDeleteUser : 'User is successfully deleted',
-    userNotFoundForDelete : 'Sorry!!,User is not found for this Id'
+    userNotFoundForDelete : 'Sorry!!,User is not found for this Id',
+    errUserInfo : 'Something wrong while retrive user information',
+    msgUserInfo : 'successfully fetch userInfo',
+    emptyCurrentPassword : 'Please Enter Your Current Password',
+    emptyNewPassword : 'Please Enter Your New Password',
+    updatePassSuccess : 'Your Password is successfully Updated',
+    passwordNotMatch : 'Your Password does not Match'
 }

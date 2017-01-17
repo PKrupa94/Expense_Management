@@ -20,7 +20,8 @@ var userSchema = new Schema({
         type:Boolean,
         default: false
     },
-    mobileNo: String
+    mobileNo: String,
+    secret_token : String
 });
 
 module.exports = mongoose.model("User",userSchema);

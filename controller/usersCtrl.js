@@ -78,7 +78,8 @@ exports.userRegister = function(req,res){
             email : email,
             password : password,
             mobileNo : mobileNo,
-            isAdmin : admin
+            isAdmin : admin,
+            secret_token : jwt.sign({id:email},config.secret)
         });
         //save data into database
         userData.save(function(err,userValue){
@@ -138,7 +139,6 @@ exports.forgotPassword = function(req,res){
    });
 };
 
-
 //-----------------------------------------
     //POST : /user/deleteUser
     //User delete
@@ -148,9 +148,7 @@ exports.deleteUser = function(req,res){
     if(validate.isEmpty(req.body.id)){
         res.status(400).json({success: false, message: message.idNotFound});
     }
-    console.log(mongoose.Types.ObjectId(req.body.id))
     User.findOneAndRemove({_id:req.body.id},function(err,user){
-        console.log(err);
         if(err){
             res.status(400).json({success: false, message: message.errDeleteUser});
         }else{
@@ -159,6 +157,69 @@ exports.deleteUser = function(req,res){
                 res.json({success: true, message: message.successDeleteUser});
             }else{
                 res.status(404).json({success: false, message: message.userNotFoundForDelete});
+            }
+        }
+    });
+};
+
+//-----------------------------------------
+    //POST : /user/getUserById
+    //get user by Id
+//-----------------------------------------
+
+exports.getUserById = function(req,res){
+    if(validate.isEmpty(req.body.userId)){
+        res.json({success: false, message: message.idNotFound});
+    }
+    User.findOne({_id:req.body.userId},function(err,user){
+        if(err){
+            res.status(400).json({success: false, message: message.errUserInfo});
+        }else{
+            if(user){
+                res.json({success: true, message: message.msgUserInfo ,userData:user});
+            }else{
+                res.status(404).json({success: false, message: message.userNotFoundForDelete});
+            }
+        }
+    });
+};
+
+//-----------------------------------------
+    //POST : /user/updatePassoword
+    //update user passsword
+//-----------------------------------------
+
+exports.updatePassoword = function(req,res){
+    console.log(req);
+    if(validate.isEmpty(req.body.password)){
+        res.status(400).json({success: false, message: message.emptyCurrentPassword});
+    }else if(validate.isEmpty(req.body.newPassword)){
+        res.status(400).json({success: false, message: message.emptyNewPassword});
+    }
+
+    User.findOne({_id:req.body.userId},function(err,user){
+        if(err){
+            res.status(400).json({success: false, message: message.errUserInfo});
+        }else{
+            if(user){
+               console.log(user);
+                if(bcrypt.compareSync(req.body.password, user.password)){
+                      let salt = bcrypt.genSaltSync(saltRounds); //generate salt
+                      var encryptNewPass = bcrypt.hashSync(req.body.newPassword,salt);
+                      user.password = encryptNewPass
+                    user.save(function(err){
+                        if(err){
+                            res.status(500).json({success: false, message: message.networkErr});
+                        }else{
+                            res.json({success: true, message: message.updatePassSuccess});
+                        }
+                    });
+                }else{  
+                    res.status(404).json({success: false, message: message.passwordNotMatch});
+                }
+
+            }else{
+                 res.status(404).json({success: false, message: message.userNotFoundForDelete});
             }
         }
     });
