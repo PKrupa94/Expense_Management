@@ -224,3 +224,54 @@ exports.updatePassoword = function(req,res){
         }
     });
 };
+
+//-----------------------------------------
+    //POST : /user/getUserById
+    //get user by Id
+//-----------------------------------------
+
+exports.getUserByName = function(req,res){
+    var name = req.body.fname;
+    if(validate.isEmpty(name)){
+        res.json({success: false, message: message.emptyuser});
+    }
+    User.findOne({_id:req.body.userId},function(err,user){
+        if(err){
+            res.status(400).json({success: false, message: message.errUserInfo});
+        }else{
+            if(user){
+                res.json({success: true, message: message.msgUserInfo ,userData:user});
+            }else{
+                res.status(404).json({success: false, message: message.userNotFoundForDelete});
+            }
+        }
+    });
+};
+
+//-----------------------------------------
+
+// POST /user/getUsers
+
+//-----------------------------------------
+
+
+exports.getUsers = function (req, res) {
+    var name = req.body.fname;
+
+     if(validate.isEmpty(name.length < 1)){
+       res.status(400).json({ success: false, message: message.emptyuser});
+    }
+
+  User.find({}, function(err, users) {
+    var userMap = {};
+
+    users.forEach(function(user) {
+      userMap[user._id] = user;
+    });
+
+    console.log(userMap)
+    res.send(userMap);  
+  });
+
+
+};
