@@ -1,12 +1,12 @@
 module.exports = {
-    invalidEmail : 'Please Enter Valid Email',
-    emptyPass : 'Please Enter Your Password',
-    loginFail : 'Login Failed',
+    invalidEmail : 'Please enter valid email',
+    emptyPass : 'Please enter your password',
+    loginFail : 'Login failed',
     successLogin : 'You are successfully login',
     errorLogin : 'Please check your email and password' ,
     userNotFound : 'User is not register',
-    emptyName : 'Please Enter Your Name',
-    emptyMobileNo : 'Please Enter Valid Mobile Number',
+    emptyName : 'Please enter your name',
+    emptyMobileNo : 'Please enter valid mobile number',
     networkErr : 'something went wrong',
     alreadyRegisterUser : 'Already registed User',
     registrationFailed : 'User registration failed',
@@ -18,8 +18,9 @@ module.exports = {
     userNotFoundForDelete : 'Sorry!!,User is not found for this Id',
     errUserInfo : 'Something wrong while retrive user information',
     msgUserInfo : 'successfully fetch userInfo',
-    emptyCurrentPassword : 'Please Enter Your Current Password',
-    emptyNewPassword : 'Please Enter Your New Password',
-    updatePassSuccess : 'Your Password is successfully Updated',
-    passwordNotMatch : 'Your Password does not Match'
+    emptyCurrentPassword : 'Please enter yourcurrent password',
+    emptyNewPassword : 'Please enter your new password',
+    updatePassSuccess : 'Your password is successfully Updated',
+    passwordNotMatch : 'Your password does not Match',
+    updateUserSuccess : 'User information updated successfully'
 }

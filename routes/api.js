@@ -14,5 +14,7 @@ router.route('/user/forgotPassword').post(userCtrl.forgotPassword);
 router.route('/user/deleteUser').delete(auth.checkAuth,userCtrl.deleteUser);
 router.route('/user/getUserById').post(auth.checkAuth, userCtrl.getUserById);
 router.route('/user/updatePassword').post(auth.checkAuth, userCtrl.updatePassoword);
+router.route('/user/updateUserById').post(auth.checkAuth, userCtrl.updateUserById);
+router.route('/user/getAllUsers').post(auth.checkAuth, userCtrl.getAllUsers);
 
 module.exports = router;

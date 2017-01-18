@@ -20,6 +20,10 @@ var userSchema = new Schema({
         type:Boolean,
         default: false
     },
+    balance :{
+        type:Number,
+        default : 0
+    },
     mobileNo: String,
     secret_token : String
 });

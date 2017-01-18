@@ -96,6 +96,12 @@ exports.userRegister = function(req,res){
     //User forgotPassword
 //-----------------------------------------
 
+
+make_passwd = function(n, a) {
+  var index = (Math.random() * (a.length - 1)).toFixed(0);
+  return n > 0 ? a[index] + make_passwd(n - 1, a) : '';
+};
+
 exports.forgotPassword = function(req,res){
     var email = req.body.email;
 
@@ -119,13 +125,23 @@ exports.forgotPassword = function(req,res){
 
             // create reusable transporter object using the default SMTP transport 
             var transporter = nodemailer.createTransport(config);
+            //generate random password ,encrypt it and  update into database
+            var password = make_passwd(8, 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890');
+            var salt = bcrypt.genSaltSync(saltRounds); //generate salt
+            var encryptPass = bcrypt.hashSync(password,salt); // Hash the password with the salt
+            user.password = encryptPass
+            user.save(function(err){
+                if(err){
+                    res.json({success:false,message:message.networkErr});
+                }
+            });
 
             // setup e-mail data
             var mailOptions = {
-                from: '"EMS System" <krupa.patel.sa@gmail.com>',
+                from: 'EMS System',
                 to: user.email,
                 subject: 'Forgot password request',
-                text: 'Hello ' + user.fullName + ', your passsword is, \n password ==> ' + user.password
+                text: 'Hello ' + user.name + ',\n your passsword is ===> ' + password
             };
 
             // send mail with defined transport object 
@@ -190,7 +206,6 @@ exports.getUserById = function(req,res){
 //-----------------------------------------
 
 exports.updatePassoword = function(req,res){
-    console.log(req);
     if(validate.isEmpty(req.body.password)){
         res.status(400).json({success: false, message: message.emptyCurrentPassword});
     }else if(validate.isEmpty(req.body.newPassword)){
@@ -202,7 +217,6 @@ exports.updatePassoword = function(req,res){
             res.status(400).json({success: false, message: message.errUserInfo});
         }else{
             if(user){
-               console.log(user);
                 if(bcrypt.compareSync(req.body.password, user.password)){
                       let salt = bcrypt.genSaltSync(saltRounds); //generate salt
                       var encryptNewPass = bcrypt.hashSync(req.body.newPassword,salt);
@@ -223,4 +237,53 @@ exports.updatePassoword = function(req,res){
             }
         }
     });
+};
+
+//-----------------------------------------
+    //POST : /user/updateUserById
+    //update user information
+//-----------------------------------------
+
+exports.updateUserById = function(req,res){
+    if(validate.isEmpty(req.body.userId)){
+        res.json({success: false, message: message.idNotFound});
+    }
+    User.findOne({_id:req.body.userId},function(err,user){
+        if(err){
+            res.status(400).json({success: false, message: message.errUserInfo});
+        }else{
+            if(user){
+                user.name = req.body.name || user.name
+                user.email = req.body.email || user.email
+                user.mobileNo = req.body.mobileNo || user.mobileNo
+                user.isAdmin = req.body.isAdmin || user.isAdmin
+                user.balance = Number(req.body.balance) || user.balance
+            user.save(function(err){
+                if(err){
+                    res.status(500).json({success: false, message: message.networkErr});
+                }else{
+                    res.json({success:true,message:message.updateUserSuccess,user:user})
+                 }
+            });
+            }else{
+                res.status(404).json({success: false, message: message.userNotFoundForDelete});
+            }
+        }
+    });
+};
+
+//-----------------------------------------
+    //POST : /user/getAllUsers
+    //get all users form db
+//-----------------------------------------
+
+exports.getAllUsers = function(req,res){
+    User.find({}, function(err, users) {
+    var userMap = {};
+    users.forEach(function(user) {
+      userMap[user.name] = user;
+    });
+     res.json({success:true,user:userMap})
+  });
+
 };
