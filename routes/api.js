@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var router = express.Router(); // get an instance of the router for api routes
 const userCtrl = require('../controller/usersCtrl');
+const expenseCtrl = require('../controller/expenseCtrl');
 const auth = require('../middleware/auth');
 
 
@@ -25,7 +26,9 @@ router.route('/user/forgotPassword').post(userCtrl.forgotPassword);
 router.route('/user/deleteUser').delete(userCtrl.deleteUser);
 router.route('/user/getUserById').post(userCtrl.getUserById);
 router.route('/user/updatePassword').post(userCtrl.updatePassoword);
-router.route('/user/updateUserById').post(userCtrl.updateUserById);
+// router.route('/user/updateUserById').post(userCtrl.updateUserById);
 router.route('/user/getAllUsers').post(userCtrl.getAllUsers);
+ router.route('/expense/addExpense').post(expenseCtrl.addExpense);
+
 
 module.exports = router;
