@@ -7,12 +7,10 @@ const config = require('../config'); //get config file
 const validate = require('../helper/validation'); //get validation file
 const message = require('../helper/messages'); //get alertMessages file
 
-
 //-----------------------------------------
     //POST : /expens/addExpense
     //Add expense of users
 //-----------------------------------------
-
 
 
 exports.addExpense = function (req, res) {
