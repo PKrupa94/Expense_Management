@@ -17,13 +17,15 @@ const _ = require('lodash');
 
 exports.addExpense = function (req, res) {
     var payerName = req.body.payer;
-    var debtUsers = req.body.debtUser;
+    var debetor = req.body.debtUser;
     var totalAmount = req.body.totalAmount;
     var expDesc = req.body.description;
+    var payerId =  req.body.payerId;
+    var remainingAmt = 0
 
     if (validate.isEmpty(payerName)) {
         res.status(400).json({ success: false, message: message.emptyPayer });
-    } else if (validate.isEmpty(debtUsers) || (debtUsers.length < 1)) {
+    } else if (validate.isEmpty(debetor) || (debetor.length < 1)) {
         res.status(400).json({ success: false, message: message.emptyDebtUser });
     }else if (validate.isEmpty(expDesc)) {
         res.status(400).json({ success: false, message: message.emptyDesc });
@@ -31,16 +33,42 @@ exports.addExpense = function (req, res) {
         res.status(400).json({ success: false, message: message.emptyAmount }); 
     }
 
-    var totalDebtAmount = _.sumBy(debtUsers,'amount')
-    var finalAmount = Number(req.body.totalAmount) - totalDebtAmount
-
+    var totalDebtAmount = _.sumBy(debetor,'amount')
+    console.log('totalDebtAmount===================================>',totalDebtAmount);
+    console.log('Number(totalAmount)===================================>',Number(totalAmount));
+    var finalAmount = Number(totalAmount) - totalDebtAmount
+    
+    console.log('perHeadAmount===================================>',finalAmount);
     if(finalAmount < 0){
          res.json({ success: false, message: message.invalidAmount});
     }
+       finalAmount = Number(req.body.totalAmount) / debetor.length;
 
-   finalAmount = Number(req.body.totalAmount) / debtUsers.length;
-   console.log('perHeadAmount===================================>',finalAmount);
-    _.forEach(debtUsers,function (value) {
+    
+    _.forEach(debetor,function (debtUserValue) {
+            debtUserValue.amount -= finalAmount;
+    console.log('##&&&&&####',finalAmount)
+    console.log('??????',debtUserValue.amount)
+            if(payerId === debtUserValue.debtId)
+            {
+                debtUserValue.amount += Number(totalAmount);
+                remainingAmt = debtUserValue.amount;
+             console.log('############',remainingAmt)
+
+            }
+             console.log('=====+++++======',debtUserValue)
+    });
+
+//     for (debtor)
+
+// if debt.id != payerid
+// {
+// 	bal += rem/debtor.count - 1
+// }
+
+
+
+    _.forEach(debetor,function (value) {
         if (value.amount) {
             value.amount = Number(value.amount);
             value.amount += finalAmount;
@@ -49,11 +77,13 @@ exports.addExpense = function (req, res) {
         }
     });
 
+    console.log('**********************************',debetor)
+
     var expenseObj = new Expense({
         createdBy: req.body.userId,
         payer: payerName,
         payerId: req.body.payerId,
-        debtor: debtUsers,
+        debtUsers: debetor,
         totalAmount: totalAmount,
         description: expDesc
     });
