@@ -6,7 +6,6 @@ const User = require('../models/user'); //load user module
 const config = require('../config'); //get config file
 const validate = require('../helper/validation'); //get validation file
 const message = require('../helper/messages'); //get alertMessages file
-const saltRounds = 5; 
 
 
 //-----------------------------------------
