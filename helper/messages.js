@@ -24,7 +24,7 @@ module.exports = {
     passwordNotMatch : 'Your password does not Match',
     updateUserSuccess : 'User information updated successfully',
     emptyPayer : 'Please select payer',
-    emptyDebtUser : 'Please select debetor',
+    emptyDebtUser : 'Please select debtUser',
     emptyDesc : 'Please enter proper decription for expense',
     emptyAmount : 'Please enter total amount for expense'
 }

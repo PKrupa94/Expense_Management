@@ -34,29 +34,26 @@ exports.addExpense = function (req, res) {
     }
 
     var totalDebtAmount = _.sumBy(debetor,'amount')
-    console.log('totalDebtAmount===================================>',totalDebtAmount);
-    console.log('Number(totalAmount)===================================>',Number(totalAmount));
     var finalAmount = Number(totalAmount) - totalDebtAmount
     
-    console.log('perHeadAmount===================================>',finalAmount);
+ 
     if(finalAmount < 0){
          res.json({ success: false, message: message.invalidAmount});
     }
        finalAmount = Number(req.body.totalAmount) / debetor.length;
+  
 
-    
     _.forEach(debetor,function (debtUserValue) {
-            debtUserValue.amount -= finalAmount;
-    console.log('##&&&&&####',finalAmount)
-    console.log('??????',debtUserValue.amount)
-            if(payerId === debtUserValue.debtId)
-            {
-                debtUserValue.amount += Number(totalAmount);
-                remainingAmt = debtUserValue.amount;
-             console.log('############',remainingAmt)
+           
+             debtUserValue.amount -= finalAmount;
+            // if(payerId === debtUserValue.debtId)
+            // {
+            //     debtUserValue.amount = -(debtUserValue.amount);
+            //     debtUserValue.amount -= totalAmount;
 
-            }
-             console.log('=====+++++======',debtUserValue)
+            // }
+           
+             console.log('(())+++++(())',debtUserValue.amount)
     });
 
 //     for (debtor)
@@ -68,14 +65,14 @@ exports.addExpense = function (req, res) {
 
 
 
-    _.forEach(debetor,function (value) {
-        if (value.amount) {
-            value.amount = Number(value.amount);
-            value.amount += finalAmount;
-        } else {
-            value.amount = finalAmount;
-        }
-    });
+    // _.forEach(debetor,function (value) {
+    //     if (value.amount) {
+    //         value.amount = Number(value.amount);
+    //         value.amount += finalAmount;
+    //     } else {
+    //         value.amount = finalAmount;
+    //     }
+    // });
 
     console.log('**********************************',debetor)
 
@@ -83,10 +80,11 @@ exports.addExpense = function (req, res) {
         createdBy: req.body.userId,
         payer: payerName,
         payerId: req.body.payerId,
-        debtUsers: debetor,
+        debtUser: debetor,
         totalAmount: totalAmount,
         description: expDesc
     });
+
 
     expenseObj.save(function (err, createdExpense) {
         if (err) {

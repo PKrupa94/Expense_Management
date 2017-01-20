@@ -206,7 +206,7 @@ exports.updatePassoword = function(req,res){
             if(user){
                console.log(user);
                 if(bcrypt.compareSync(req.body.password, user.password)){
-                      let salt = bcrypt.genSaltSync(saltRounds); //generate salt
+                      var salt = bcrypt.genSaltSync(saltRounds); //generate salt
                       var encryptNewPass = bcrypt.hashSync(req.body.newPassword,salt);
                       user.password = encryptNewPass
                     user.save(function(err){
