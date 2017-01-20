@@ -22,5 +22,7 @@ module.exports = {
     emptyNewPassword : 'Please enter your new password',
     updatePassSuccess : 'Your password is successfully Updated',
     passwordNotMatch : 'Your password does not Match',
-    updateUserSuccess : 'User information updated successfully'
+    updateUserSuccess : 'User information updated successfully',
+    emptyExpId :  "Please enter expenseId to delete the expense.",
+    errExpDelete : "something went wrong. Please try again!"
 }
