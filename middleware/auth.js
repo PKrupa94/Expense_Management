@@ -3,9 +3,8 @@ var apiRoutes = express.Router(); // get an instance of the router for api route
 var jwt = require('jsonwebtoken');
 var config = require('../config');
 
-
 exports.checkAuth = function(req,res,next){
- 
+    console.log('varify auth token')
    var token = req.body.secret_token || req.query.secret_token || req.headers['x-access-token'];
     //decode token
     if(token){
