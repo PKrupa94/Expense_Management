@@ -5,7 +5,7 @@ Expense_Management system helps user to manage their expense, contribution in ex
 
 Node and MongoDB latest version
 
-#setUp
+#Setup
 
 Clone this repo  and run npm install to install all the dependencies.
 You might want to look into config.json to make change the port you want to use.
