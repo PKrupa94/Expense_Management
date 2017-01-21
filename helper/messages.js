@@ -24,5 +24,9 @@ module.exports = {
     passwordNotMatch : 'Your password does not Match',
     updateUserSuccess : 'User information updated successfully',
     emptyExpId :  "Please enter expenseId to delete the expense.",
-    errExpDelete : "something went wrong. Please try again!"
+    errExpDelete : "something went wrong. Please try again!",
+    emptyPayer : 'Please select payer',
+    emptyDebtUser : 'Please select debtUser',
+    emptyDesc : 'Please enter proper decription for expense',
+    emptyAmount : 'Please enter total amount for expense'
 }

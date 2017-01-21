@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt'); // Load the bcrypt module
 const nodemailer = require('nodemailer');
 const smtpTransport = require('nodemailer-smtp-transport');
 const User = require('../models/user'); //load user module
-const config = require('../config'); //get config file
+const config = require('../env/development'); //get config file
 const validate = require('../helper/validation'); //get validation file
 const message = require('../helper/messages'); //get alertMessages file
 const saltRounds = 5; 
@@ -47,7 +47,6 @@ exports.login = function(req,res){
 //-----------------------------------------
 
 exports.userRegister = function(req,res){
-   
    var email = req.body.email;
    var salt = bcrypt.genSaltSync(saltRounds); //generate salt
    var encryptPass = bcrypt.hashSync(req.body.password,salt); // Hash the password with the salt
@@ -83,9 +82,12 @@ exports.userRegister = function(req,res){
         });
         //save data into database
         userData.save(function(err,userValue){
-            if(err) res.json({success:false,message:message.registrationFailed}); 
-            console.log(userValue)
-            res.status(200).json({success:true,message:message.successRegister});
+            
+            if(err) {
+                res.json({success:false,message:message.registrationFailed,error:err});
+            }else{
+                res.status(200).json({success:true,message:message.successRegister});
+            }
            });
         }     
    });
@@ -204,7 +206,7 @@ exports.updatePassoword = function(req,res){
             if(user){
                console.log(user);
                 if(bcrypt.compareSync(req.body.password, user.password)){
-                      let salt = bcrypt.genSaltSync(saltRounds); //generate salt
+                      var salt = bcrypt.genSaltSync(saltRounds); //generate salt
                       var encryptNewPass = bcrypt.hashSync(req.body.newPassword,salt);
                       user.password = encryptNewPass
                     user.save(function(err){
@@ -250,28 +252,23 @@ exports.getUserByName = function(req,res){
 
 //-----------------------------------------
 
-// POST /user/getUsers
+// POST /user/getAllUsers
 
 //-----------------------------------------
 
 
-exports.getUsers = function (req, res) {
+exports.getAllUsers = function (req, res) {
     var name = req.body.fname;
-
-     if(validate.isEmpty(name.length < 1)){
+    if(validate.isEmpty(name.length < 1)){
        res.status(400).json({ success: false, message: message.emptyuser});
     }
 
   User.find({}, function(err, users) {
     var userMap = {};
-
+    
     users.forEach(function(user) {
       userMap[user._id] = user;
     });
-
-    console.log(userMap)
     res.send(userMap);  
   });
-
-
 };
