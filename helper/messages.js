@@ -22,5 +22,15 @@ module.exports = {
     emptyNewPassword : 'Please enter your new password',
     updatePassSuccess : 'Your password is successfully Updated',
     passwordNotMatch : 'Your password does not Match',
-    updateUserSuccess : 'User information updated successfully'
+    updateUserSuccess : 'User information updated successfully',
+    emptyPayer : 'Please select payer',
+    emptyDebtUser : 'Please select debtUser',
+    emptyDesc : 'Please enter proper decription for expense',
+    emptyAmount : 'Please enter total amount for expense',
+    payerIdNotFound : 'No user found for the given payerId' ,
+    expenseIdNotFound : 'No found expense for given expenseId',
+    savedExpense : 'Expense saved successfully',
+    errAddExpense : 'Error occured while creating expense',
+    updateExpense : 'Expense updated successfully'
+   
 }
