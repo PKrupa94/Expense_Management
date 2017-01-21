@@ -98,3 +98,72 @@ exports.addExpense = function (req, res) {
 
 
 }
+
+
+
+
+exports.deleteExpense = function (req, res, next) {
+
+    var expID = req.body.expnId;
+    if (validate.isEmpty(expID)) {
+        res.status(400).json({ message: message.emptyExpId })
+    }
+    Expense.findById(expID, (err, expResult) => {
+        if (err) {
+            res.status(500).json({ message: message.errExpDelete });
+        }
+        if (expResult) {
+            req.updatedDebt = expResult.debtor;
+
+            var totalAmt = expResult.totalAmount;
+            var payerID = expResult.payerId;
+            req.isDelete = true;
+            var payerObj;
+            User.findById(payerID, (err, user) => {
+                if (err) {
+                    res.status(404).json({ success: false, message: 'No used found with the given payerId' });
+                }
+
+                if (user) {
+                    payerObj = user;
+                    req.totalAmount = Number(totalAmt);
+                    req.payer = payerObj;
+                    req.debtor = debetor;
+                    updateExpenseforPayerNUser(req,res);
+                  
+                } else {
+                    res.status(404).json({ success: false, message: 'No user found with the given payerId' });
+                }
+            });
+        } else {
+            res.status(404).json({ message: "expense not found with the given id" });
+        }
+    });
+};
+
+
+function updateExpenseforPayerNUser(req, res) {
+
+var payerID = req.body.payer.payerID;
+var debtUsers = req.body.debtor
+var totalAmount = req.body.totalAmount;
+ _.forEach(debtUsers,function (debtUser) {
+           
+             debtUserValue.amount -= finalAmount;
+            if(payerID === debtUser.debtId)
+            // {
+            //     debtUserValue.amount = -(debtUserValue.amount);
+            //     debtUserValue.amount -= totalAmount;
+
+            // }
+           
+             console.log('(())+++++(())',debtUserValue.amount)
+    });
+  user.balance += Number(totalAmt);
+   user.save((err) => {
+  if (err) {
+console.log("Save error " + err);
+  res.status(500).json({ success: false, message: 'Something went wrong' });
+     }
+   });
+};
