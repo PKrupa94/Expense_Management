@@ -10,71 +10,42 @@ const _ = require('lodash');
 
 
 //-----------------------------------------
-    //POST : /expens/addExpense
-    //Add expense of users
+//POST : /expens/addExpense
+//Add expense of users
 //-----------------------------------------
-
 
 exports.addExpense = function (req, res) {
     var payerName = req.body.payer;
     var debetor = req.body.debtUser;
     var totalAmount = req.body.totalAmount;
     var expDesc = req.body.description;
-    var payerId =  req.body.payerId;
+    var payerId = req.body.payerId;
     var remainingAmt = 0
 
     if (validate.isEmpty(payerName)) {
         res.status(400).json({ success: false, message: message.emptyPayer });
     } else if (validate.isEmpty(debetor) || (debetor.length < 1)) {
         res.status(400).json({ success: false, message: message.emptyDebtUser });
-    }else if (validate.isEmpty(expDesc)) {
+    } else if (validate.isEmpty(expDesc)) {
         res.status(400).json({ success: false, message: message.emptyDesc });
     } else if (validate.isEmpty(totalAmount)) {
-        res.status(400).json({ success: false, message: message.emptyAmount }); 
+        res.status(400).json({ success: false, message: message.emptyAmount });
     }
 
-    var totalDebtAmount = _.sumBy(debetor,'amount')
+    var totalDebtAmount = _.sumBy(debetor, 'amount')
     var finalAmount = Number(totalAmount) - totalDebtAmount
-    
- 
-    if(finalAmount < 0){
-         res.json({ success: false, message: message.invalidAmount});
+
+    if (finalAmount < 0) {
+        res.json({ success: false, message: message.invalidAmount });
     }
-       finalAmount = Number(req.body.totalAmount) / debetor.length;
-  
+    finalAmount = Number(req.body.totalAmount) / debetor.length;
 
-    _.forEach(debetor,function (debtUserValue) {
-           
-             debtUserValue.amount -= finalAmount;
-            // if(payerId === debtUserValue.debtId)
-            // {
-            //     debtUserValue.amount = -(debtUserValue.amount);
-            //     debtUserValue.amount -= totalAmount;
 
-            // }
-           
-             console.log('(())+++++(())',debtUserValue.amount)
+    _.forEach(debetor, function (debtUserValue) {
+        debtUserValue.amount -= finalAmount;
     });
 
-//     for (debtor)
-
-// if debt.id != payerid
-// {
-// 	bal += rem/debtor.count - 1
-// }
-
-
-
-    // _.forEach(debetor,function (value) {
-    //     if (value.amount) {
-    //         value.amount = Number(value.amount);
-    //         value.amount += finalAmount;
-    //     } else {
-    //         value.amount = finalAmount;
-    //     }
-    // });
-
-    console.log('**********************************',debetor)
+    req.updateDebtData = debtUserValue;
 
     var expenseObj = new Expense({
         createdBy: req.body.userId,
@@ -85,85 +56,62 @@ exports.addExpense = function (req, res) {
         description: expDesc
     });
 
-
     expenseObj.save(function (err, createdExpense) {
         if (err) {
             console.error(err);
-            res.status(400).json({ message: 'Error creating expense!!!' });
-        }else{
-            res.json({success:true,message:'Saved Expense'})
+            res.status(400).json({ message: message.errAddExpense });
+        } else {
+           // res.json({ success: true, message: message.savedExpense })
+            updateDebtUserData(req, res)
         }
-       
     });
-
-
 }
 
+function updateDebtUserData(req, res) {
+    let debtData = req.updateDebtData;
+    var debtIds = _.map(debtData, 'debtId');
 
-
-
-exports.deleteExpense = function (req, res, next) {
-
-    var expID = req.body.expnId;
-    if (validate.isEmpty(expID)) {
-        res.status(400).json({ message: message.emptyExpId })
-    }
-    Expense.findById(expID, (err, expResult) => {
+    User.findById(req.body.payerId, function (err, user) {
         if (err) {
-            res.status(500).json({ message: message.errExpDelete });
-        }
-        if (expResult) {
-            req.updatedDebt = expResult.debtor;
-
-            var totalAmt = expResult.totalAmount;
-            var payerID = expResult.payerId;
-            req.isDelete = true;
-            var payerObj;
-            User.findById(payerID, (err, user) => {
-                if (err) {
-                    res.status(404).json({ success: false, message: 'No used found with the given payerId' });
-                }
-
-                if (user) {
-                    payerObj = user;
-                    req.totalAmount = Number(totalAmt);
-                    req.payer = payerObj;
-                    req.debtor = debetor;
-                    updateExpenseforPayerNUser(req,res);
-                  
-                } else {
-                    res.status(404).json({ success: false, message: 'No user found with the given payerId' });
-                }
-            });
+            res.status(404).json({ success: false, message: message.payerIdNotFound });
         } else {
-            res.status(404).json({ message: "expense not found with the given id" });
+            if (user) {
+                user.balance += Number(req.body.totalAmount);
+                user.save((err) => {
+                    if (err) {
+                        res.status(500).json({ success: false, message: message.networkErr });
+                    }
+                })
+            }
+            else {
+                res.status(404).json({ success: false, message: message.payerIdNotFound });
+            }
+        }
+    })
+    User.find().where('_id').in(debtIds).exec(function (err, debtUsers) {
+        if (err) {
+            res.status(500).json({ success: false, message: message.networkErr });
+        }
+        if (debtUsers.length > 0) {
+            for (i = 0; i < debtUsers.length; i++) {
+                let objDebt = _.find(debt, { 'debtId': debtUsers[i]._id.toString() });
+                let options = {
+                    user: debtUsers[i],
+                    amount: objDebt.amount,
+                    res: res,
+                    req: req
+                }
+                debtUsers[i].balance -= objDebt.amount;
+                debtUsers[i].save((err) => {
+                    if (err) {
+                        res.status(500).json({ success: false, message: message.networkErr});
+                    }
+                        res.status(200).json({ message: message.savedExpense});
+                });
+            }
         }
     });
 };
 
 
-function updateExpenseforPayerNUser(req, res) {
 
-var payerID = req.body.payer.payerID;
-var debtUsers = req.body.debtor
-var totalAmount = req.body.totalAmount;
- _.forEach(debtUsers,function (debtUser) {
-           
-             debtUserValue.amount -= finalAmount;
-            if(payerID === debtUser.debtId)
-            // {
-            //     debtUserValue.amount = -(debtUserValue.amount);
-            //     debtUserValue.amount -= totalAmount;
-
-            // }
-           
-             console.log('(())+++++(())',debtUserValue.amount)
-    });
-  user.balance += Number(totalAmt);
-   user.save((err) => {
-  if (err) {
-console.log("Save error " + err);
-  res.status(500).json({ success: false, message: 'Something went wrong' });
-     }
-   });
-};

@@ -26,6 +26,7 @@ exports.login = function(req,res){
     }
 
     User.find({email : email},function(err,users){
+        console.log('===============================>',users);
         if(err) res.json({success:false,message:message.loginFail});
         if (users.length > 0){
               if (bcrypt.compareSync(password, users[0].password)) {
@@ -35,7 +36,7 @@ exports.login = function(req,res){
                 res.status(400).json({ success: false, message: message.errorLogin});
             }
         }else{
-            res.status(400).json({success:false,message:message.userNotFound});
+            res.json({success:false,message:message.userNotFound});
         }
     });
 };
@@ -82,12 +83,12 @@ exports.userRegister = function(req,res){
         });
         //save data into database
         userData.save(function(err,userValue){
-            
             if(err) {
                 res.json({success:false,message:message.registrationFailed,error:err});
             }else{
-                res.status(200).json({success:true,message:message.successRegister});
-            }
+                res.status(200).json({success:true,message:message.successRegister,userData:userValue});
+
+            } 
            });
         }     
    });
@@ -257,11 +258,13 @@ exports.getUserByName = function(req,res){
 //-----------------------------------------
 
 
-exports.getAllUsers = function (req, res) {
-    var name = req.body.fname;
-    if(validate.isEmpty(name.length < 1)){
-       res.status(400).json({ success: false, message: message.emptyuser});
-    }
+
+exports.getUsers = function (req, res) {
+    // var name = req.body.fname;
+
+    //  if(validate.isEmpty(name.length < 1)){
+    //    res.status(400).json({ success: false, message: message.emptyuser});
+    // }
 
   User.find({}, function(err, users) {
     var userMap = {};

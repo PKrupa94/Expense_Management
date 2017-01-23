@@ -18,7 +18,7 @@ module.exports = {
     userNotFoundForDelete : 'Sorry!!,User is not found for this Id',
     errUserInfo : 'Something wrong while retrive user information',
     msgUserInfo : 'successfully fetch userInfo',
-    emptyCurrentPassword : 'Please enter yourcurrent password',
+    emptyCurrentPassword : 'Please enter your current password',
     emptyNewPassword : 'Please enter your new password',
     updatePassSuccess : 'Your password is successfully Updated',
     passwordNotMatch : 'Your password does not Match',
@@ -26,5 +26,10 @@ module.exports = {
     emptyPayer : 'Please select payer',
     emptyDebtUser : 'Please select debtUser',
     emptyDesc : 'Please enter proper decription for expense',
-    emptyAmount : 'Please enter total amount for expense'
+    emptyAmount : 'Please enter total amount for expense',
+    payerIdNotFound : 'No user found for the given payerId' ,
+    expenseIdNotFound : 'No found expense for given expenseId',
+    savedExpense : 'Expense saved successfully',
+    errAddExpense : 'Error occured while creating expense',
+    updateExpense : 'Expense updated successfully'
 }
