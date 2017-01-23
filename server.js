@@ -9,8 +9,8 @@ const morgan      = require('morgan'); // log requests to the console
 const mongoose    = require('mongoose'); //interact with our MongoDB database
 const jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 //const config = require('../EMS/config'); // get our config file
-const User   = require('../EMS/models/user'); // get our mongoose model
-var config = require('../EMS/env/development');
+const User   = require('./models/user'); // get our mongoose model
+var config = require('./env/development');
 
 //-----------------------------------------
     //Configuration
