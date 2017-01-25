@@ -264,7 +264,6 @@ exports.getUsers = function (req, res) {
 
   User.find({}, function(err, users) {
     var userMap = {};
-
     users.forEach(function(user) {
       userMap[user._id] = user;
     });
@@ -272,6 +271,4 @@ exports.getUsers = function (req, res) {
     console.log(userMap)
     res.send(userMap);  
   });
-
-
 };
