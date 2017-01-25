@@ -265,6 +265,8 @@ router.route('/user/updatePassword').post(userCtrl.updatePassoword);
 // router.route('/user/updateUserById').post(userCtrl.updateUserById);
 router.route('/expense/addExpense').post(expenseCtrl.addExpense);
 router.route('/user/getUsers').post(userCtrl.getUsers);
+router.route('/expense/addExpense').post(expenseCtrl.addExpense);
+
 
 
 module.exports = router;
